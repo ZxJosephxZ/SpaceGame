@@ -6,6 +6,7 @@ import java.io.IOException;
 
 public class Loader {
 
+    //Metodo que nos permite leer las imagenes requeridas y retornarla para su uso
     public static BufferedImage ImageLoader(String path)
     {
         try
