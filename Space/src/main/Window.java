@@ -1,5 +1,6 @@
 package main;
 
+import gameObject.Constants;
 import graphics.Assets;
 import input.KeyBoard;
 import states.GameState;
@@ -10,8 +11,7 @@ import java.awt.image.BufferStrategy;
 
 public class Window extends JFrame implements Runnable{
 
-    public static final int WIDTH = 800;
-    public static final int HEIGHT = 600;
+
     private Canvas canvas;
     private Thread thread;
     private boolean running = false;
@@ -31,7 +31,7 @@ public class Window extends JFrame implements Runnable{
     {
         setTitle("Space ship game");
         //Definir el tamaño de la pantalla
-        setSize(WIDTH,HEIGHT);
+        setSize(Constants.WIDTH,Constants.HEIGHT);
         //Habilita la opcion de cerrado de la ventana
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //Desactiva la opcion para maximizar o minizar la pantalla
@@ -39,23 +39,24 @@ public class Window extends JFrame implements Runnable{
         //El posicionamiento a la hora de mostrar la pantalla
         setLocationRelativeTo(null);
         //Muestra la pantalla
-        setVisible(true);
+
 
         // canvas objeto que nos permite definir un recuadro para dibujar o capturar un input
         canvas = new Canvas();
         // keyboard es un objeto que nos permite manejar los input por teclado
         keyBoard = new KeyBoard();
         //Establece el tamaño preferido para el recuadro del canvas
-        canvas.setPreferredSize(new Dimension(WIDTH,HEIGHT));
+        canvas.setPreferredSize(new Dimension(Constants.WIDTH,Constants.HEIGHT));
         //Establece el tamaño maximo
-        canvas.setMaximumSize(new Dimension(WIDTH,HEIGHT));
+        canvas.setMaximumSize(new Dimension(Constants.WIDTH,Constants.HEIGHT));
         //Establece el tamaño minimo
-        canvas.setMinimumSize(new Dimension(WIDTH,HEIGHT));
+        canvas.setMinimumSize(new Dimension(Constants.WIDTH,Constants.HEIGHT));
         //Nos permite interactuar con el canvas
         canvas.setFocusable(true);
         //Añadimos el canvas
         add(canvas);
         canvas.addKeyListener(keyBoard);
+        setVisible(true);
     }
 
     public static void main(String[] args)
@@ -87,7 +88,7 @@ public class Window extends JFrame implements Runnable{
         //Establece el color en negro
         g.setColor(Color.BLACK);
         //Nos dibuja un rectangulo lleno
-        g.fillRect(0,0,WIDTH,HEIGHT);
+        g.fillRect(0,0,Constants.WIDTH,Constants.HEIGHT);
         //Pasamos los graficos a el objeto que tiene el metodo para dibujar (draw)
         gameState.draw(g);
         //Dibuja los string (parecido a un print pero es en un canvas)
