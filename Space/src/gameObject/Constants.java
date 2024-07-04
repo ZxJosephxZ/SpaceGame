@@ -4,8 +4,8 @@ public class Constants {
 
     //frame dimensions
 
-    public static final int WIDTH = 1000;
-    public static final int HEIGHT = 600;
+    public static final int WIDTH = 1920;
+    public static final int HEIGHT = 1080;
 
     //player properties
 
@@ -21,4 +21,8 @@ public class Constants {
     //meteor properties
 
     public static final double METEOR_VEL = 2.0;
+
+    // player1 properties (ufo)
+
+    public static final int NODE_RADIUS = 160;
 }

@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 public class Assets {
 
     public static BufferedImage player;
+    public static BufferedImage player1;
     public static BufferedImage speed;
     public static BufferedImage blueLaser, greenLaser, redLaser;
 
@@ -12,6 +13,8 @@ public class Assets {
     public static BufferedImage[] meds = new BufferedImage[2];
     public static BufferedImage[] smalls = new BufferedImage[2];
     public static BufferedImage[] tinies = new BufferedImage[2];
+
+    public static BufferedImage[] exp = new BufferedImage[9];
 
     //Nos permite cargar la imagen en una variable para su posterior leida y uso
     public static void init()
@@ -38,5 +41,10 @@ public class Assets {
         {
             tinies[i] = Loader.ImageLoader("/meteors/tiny"+(i+1)+".png");
         }
+        for(int i = 0; i < exp.length; i++)
+        {
+            exp[i] = Loader.ImageLoader("/explosion/"+(i)+".png");
+        }
+        player1 = Loader.ImageLoader("/ships/player1.png");
     }
 }

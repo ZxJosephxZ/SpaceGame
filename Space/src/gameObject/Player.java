@@ -87,19 +87,17 @@ public class Player extends MovingObject{
         }
 
         fireRate.update();
+        collidesWith();
     }
 
     @Override
     public void draw(Graphics g) {
         Graphics2D g2d = (Graphics2D)g;
-        AffineTransform at1 = AffineTransform.getTranslateInstance(position.getX() + width/2 + 5, position.getY() + height/2 + 10);
-        AffineTransform at2 = AffineTransform.getTranslateInstance(position.getX() + 5, position.getY() + height/2 + 10);
-        at1.rotate(angle, -5, -10);
-        at2.rotate(angle, width/2 -5, -10);
+        AffineTransform at1 = AffineTransform.getTranslateInstance(position.getX() -20, position.getY()-12);
+        at1.rotate(angle, width/2 + 20, height/2 +12);
         if(accelerating)
         {
             g2d.drawImage(Assets.speed, at1, null);
-            g2d.drawImage(Assets.speed, at2, null);
         }
 
         at = AffineTransform.getTranslateInstance(position.getX(), position.getY());
@@ -108,8 +106,5 @@ public class Player extends MovingObject{
         g2d.drawImage(texture, at, null);
     }
 
-    public Vector2D getCenter()
-    {
-        return new Vector2D(position.getX()  + width/2, position.getY() + height/2);
-    }
+
 }
