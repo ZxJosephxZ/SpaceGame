@@ -11,19 +11,30 @@ import java.util.ArrayList;
 
 public class GameState {
 
+    public static final Vector2D PLAYER_START_POSITION = new Vector2D(Constants.WIDTH/2 - Assets.player.getWidth()/2,
+            Constants.HEIGHT/2 - Assets.player.getHeight()/2);
     private Player player;
     private ArrayList<MovingObject> movingObject = new ArrayList<>();
     private ArrayList<Animation> explosions = new ArrayList<Animation>();
     private int meteors;
+    private int lives;
+
+    //Preferible crear una clase con estos datos (en este caso al ser pequeño el programa no hay necesidad)
+    private int score = 0;
 
     public GameState()
     {
-        player = new Player(new Vector2D(Constants.WIDTH/2 - Assets.player.getWidth()/2,
-                Constants.HEIGHT/2 - Assets.player.getHeight()/2), new Vector2D(), Constants.PLAYER_MAX_VEL, Assets.player, this);
+        player = new Player(PLAYER_START_POSITION, new Vector2D(), Constants.PLAYER_MAX_VEL, Assets.player, this);
         movingObject.add(player);
         meteors = 1;
+        lives = 3;
 
         startWave();
+    }
+
+    public void addScore(int value)
+    {
+        score += value;
     }
 
     public void divideMeteor(Meteor meteor)
@@ -81,6 +92,7 @@ public class GameState {
             ));
         }
         meteors++;
+        spawnUfo();
     }
 
     public void playExplosion(Vector2D position)
@@ -89,6 +101,43 @@ public class GameState {
                 Assets.exp,
                 50,
                 position.subtract(new Vector2D(Assets.exp[0].getWidth()/2,Assets.exp[0].getHeight()/2))
+        ));
+    }
+
+    private void spawnUfo()
+    {
+        int rand = (int) (Math.random()*2);
+
+        double x = rand == 0 ? (Math.random()*Constants.WIDTH) : 0;
+        double y = rand == 0 ? 0 : (Math.random()*Constants.HEIGHT);
+
+        ArrayList<Vector2D> path = new ArrayList<Vector2D>();
+
+        double posX, posY;
+
+        posX = Math.random()*Constants.WIDTH/2;
+        posY = Math.random()*Constants.HEIGHT/2;
+        path.add(new Vector2D(posX, posY));
+
+        posX = Math.random()*(Constants.WIDTH/2) + Constants.WIDTH/2;
+        posY = Math.random()*Constants.HEIGHT/2;
+        path.add(new Vector2D(posX, posY));
+
+        posX = Math.random()*Constants.WIDTH/2;
+        posY = Math.random()*(Constants.HEIGHT/2) + Constants.HEIGHT/2;
+        path.add(new Vector2D(posX, posY));
+
+        posX = Math.random()*(Constants.WIDTH/2) + Constants.WIDTH/2;
+        posY = Math.random()*(Constants.HEIGHT/2) + Constants.HEIGHT/2;
+        path.add(new Vector2D(posX, posY));
+
+        movingObject.add(new Ufo(
+                new Vector2D(x, y),
+                new Vector2D(),
+                Constants.UFO_MAX_VEL,
+                Assets.player1,
+                path,
+                this
         ));
     }
 
@@ -133,11 +182,54 @@ public class GameState {
         for(int i = 0; i < explosions.size(); i++)
         {
             Animation anim = explosions.get(i);
-            g2d.drawImage(anim.getCurrentFrame(), (int)anim.getPosition().getX(), (int)anim.getPosition().getY(), null);
+            g2d.drawImage(anim.getCurrentFrame(), (int)anim.getPosition().getX() , (int)anim.getPosition().getY(), null);
+        }
+        drawScore(g);
+        drawLives(g);
+    }
+
+    private void drawLives(Graphics g)
+    {
+        Vector2D livePosition = new Vector2D(25, 25);
+        g.drawImage(Assets.others, (int)livePosition.getX(), (int)livePosition.getY(), null);
+        g.drawImage(Assets.numbers[10], (int)livePosition.getX()+40,
+                (int)livePosition.getY()+5, null);
+        String liveToString = Integer.toString(lives);
+        Vector2D pos = new Vector2D(livePosition.getX(), livePosition.getY());
+        for(int i = 0; i < liveToString.length(); i++)
+        {
+            int number = Integer.parseInt(liveToString.substring(i, i+1));
+            if(number <= 0)
+            {
+                break;
+            }
+            g.drawImage(Assets.numbers[number],
+                    (int)pos.getX()+60,
+                    (int)pos.getY()+5,
+                    null);
+            pos.setX(pos.getX()+20);
+        }
+    }
+
+    private void drawScore(Graphics g)
+    {
+        Vector2D pos = new Vector2D(1800,25);
+        String scoreToString = Integer.toString(score);
+        for(int i = 0; i < scoreToString.length(); i++)
+        {
+            g.drawImage(Assets.numbers[Integer.parseInt(scoreToString.substring(i, i+1))],
+                    (int)pos.getX(), (int)pos.getY(), null);
+            pos.setX(pos.getX() + 20);
         }
     }
 
     public ArrayList<MovingObject> getMovingObject() {
         return movingObject;
     }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void subtracLife(){lives--;}
 }

@@ -21,8 +21,17 @@ public class Constants {
     //meteor properties
 
     public static final double METEOR_VEL = 2.0;
+    public static final int METEOR_SCORE = 20;
 
     // player1 properties (ufo)
 
     public static final int NODE_RADIUS = 160;
+    public static final double UFO_MASS = 60;
+    public static final int UFO_MAX_VEL = 3;
+    public static final long UFO_FIRE_RATE = 1000;
+    public static final double UFO_ANGLE_RANGE = Math.PI/2;
+    public static final int UFO_SCORE = 40;
+
+    public static final long SPAWING_TIME = 3000;
+    public static final long FLICKER_TIME = 200;
 }

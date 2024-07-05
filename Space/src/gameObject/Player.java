@@ -17,17 +17,36 @@ public class Player extends MovingObject{
     private boolean accelerating = false;
     private Cronometer fireRate;
 
+    private boolean spawing, visible;
+    private Cronometer spawnTime, flickerTime;
+
     public Player(Vector2D position, Vector2D velocity, double maxVel, BufferedImage texture, GameState gameState) {
         super(position, velocity, maxVel, texture, gameState);
         heading = new Vector2D(0, 1);
         acceleration = new Vector2D();
         fireRate = new Cronometer();
+        spawnTime = new Cronometer();
+        flickerTime = new Cronometer();
     }
 
     @Override
     public void update() {
 
-        if(KeyBoard.SHOOT && !fireRate.isRunning())
+        if(!spawnTime.isRunning())
+        {
+            spawing = false;
+            visible = true;
+        }
+        if(spawing)
+        {
+            if(!flickerTime.isRunning())
+            {
+                flickerTime.run(Constants.FLICKER_TIME);
+                visible = !visible;
+            }
+        }
+
+        if(KeyBoard.SHOOT && !fireRate.isRunning() && !spawing)
         {
             gameState.getMovingObject().add(0, new Laser(
                     getCenter().add(heading.scale(width)),
@@ -87,11 +106,36 @@ public class Player extends MovingObject{
         }
 
         fireRate.update();
+        spawnTime.update();
+        flickerTime.update();
         collidesWith();
     }
 
     @Override
+    public void Destroy()
+    {
+        spawing = true;
+        spawnTime.run(Constants.SPAWING_TIME);
+        resetValues();
+        gameState.subtracLife();
+    }
+
+    private void resetValues()
+    {
+        angle = 0;
+        velocity = new Vector2D();
+        position = new Vector2D(Constants.WIDTH/2 - Assets.player.getWidth()/2,
+                Constants.HEIGHT/2 - Assets.player.getHeight()/2);
+    }
+
+    @Override
     public void draw(Graphics g) {
+
+        if(!visible)
+        {
+            return;
+        }
+
         Graphics2D g2d = (Graphics2D)g;
         AffineTransform at1 = AffineTransform.getTranslateInstance(position.getX() -20, position.getY()-12);
         at1.rotate(angle, width/2 + 20, height/2 +12);
@@ -106,5 +150,6 @@ public class Player extends MovingObject{
         g2d.drawImage(texture, at, null);
     }
 
+    public boolean isSpawing(){return spawing;}
 
 }

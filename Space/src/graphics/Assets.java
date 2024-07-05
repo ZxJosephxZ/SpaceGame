@@ -16,6 +16,10 @@ public class Assets {
 
     public static BufferedImage[] exp = new BufferedImage[9];
 
+    public static BufferedImage[] numbers = new BufferedImage[11];
+
+    public static BufferedImage others;
+
     //Nos permite cargar la imagen en una variable para su posterior leida y uso
     public static void init()
     {
@@ -45,6 +49,13 @@ public class Assets {
         {
             exp[i] = Loader.ImageLoader("/explosion/"+(i)+".png");
         }
-        player1 = Loader.ImageLoader("/ships/player1.png");
+        player1 = Loader.ImageLoader("/ships/ufo.png");
+
+        for(int i = 0; i < numbers.length; i++)
+        {
+            numbers[i] = Loader.ImageLoader("/numbers/"+(i)+".png");
+        }
+
+        others = Loader.ImageLoader("/others/life.png");
     }
 }
