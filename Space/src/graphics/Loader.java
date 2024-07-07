@@ -1,6 +1,7 @@
 package graphics;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -19,4 +20,12 @@ public class Loader {
         return null;
     }
 
+    public static Font loadFont(String path, int size)
+    {
+        try {
+            return Font.createFont(Font.TRUETYPE_FONT, Loader.class.getResourceAsStream(path)).deriveFont(Font.PLAIN, size);
+        } catch (FontFormatException | IOException e) {
+            return null;
+        }
+    }
 }

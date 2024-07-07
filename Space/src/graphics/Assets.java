@@ -1,5 +1,6 @@
 package graphics;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Assets {
@@ -20,6 +21,9 @@ public class Assets {
 
     public static BufferedImage others;
 
+    public static Font fontBig;
+    public static Font fontMed;
+
     //Nos permite cargar la imagen en una variable para su posterior leida y uso
     public static void init()
     {
@@ -28,6 +32,9 @@ public class Assets {
         blueLaser = Loader.ImageLoader("/lasers/laserBlue01.png");
         greenLaser = Loader.ImageLoader("/lasers/laserGreen11.png");
         redLaser = Loader.ImageLoader("/lasers/laserRed01.png");
+        others = Loader.ImageLoader("/others/life.png");
+        fontBig = Loader.loadFont("/fonts/futureFont.ttf", 62);
+        fontMed = Loader.loadFont("/fonts/futureFont.ttf", 40);
 
         for(int i = 0; i < bigs.length; i++)
         {
@@ -56,6 +63,7 @@ public class Assets {
             numbers[i] = Loader.ImageLoader("/numbers/"+(i)+".png");
         }
 
-        others = Loader.ImageLoader("/others/life.png");
+
+
     }
 }

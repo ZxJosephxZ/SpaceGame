@@ -3,11 +3,13 @@ package states;
 import gameObject.*;
 import graphics.Animation;
 import graphics.Assets;
+import graphics.Text;
 import math.Vector2D;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Vector;
 
 public class GameState {
 
@@ -16,8 +18,11 @@ public class GameState {
     private Player player;
     private ArrayList<MovingObject> movingObject = new ArrayList<>();
     private ArrayList<Animation> explosions = new ArrayList<Animation>();
+    private ArrayList<Message> messages = new ArrayList<Message>();
     private int meteors;
-    private int lives;
+    private int lives=3;
+    private int waves = 1;
+
 
     //Preferible crear una clase con estos datos (en este caso al ser pequeño el programa no hay necesidad)
     private int score = 0;
@@ -27,14 +32,18 @@ public class GameState {
         player = new Player(PLAYER_START_POSITION, new Vector2D(), Constants.PLAYER_MAX_VEL, Assets.player, this);
         movingObject.add(player);
         meteors = 1;
-        lives = 3;
 
         startWave();
     }
 
-    public void addScore(int value)
+    public void addScore(int value, Vector2D position)
     {
         score += value;
+        messages.add(new Message(position, true, "+"+value+" score", Color.WHITE, false, Assets.fontMed, this));
+    }
+
+    public ArrayList<Message> getMessages() {
+        return messages;
     }
 
     public void divideMeteor(Meteor meteor)
@@ -74,6 +83,9 @@ public class GameState {
 
     private void startWave()
     {
+        messages.add(new Message(new Vector2D(Constants.WIDTH/2, Constants.HEIGHT/2),true,
+                "WAVE "+waves, Color.WHITE, true, Assets.fontBig, this));
+
         double x, y;
 
         for(int i = 0; i < meteors; i++)
@@ -93,6 +105,7 @@ public class GameState {
         }
         meteors++;
         spawnUfo();
+        waves++;
     }
 
     public void playExplosion(Vector2D position)
@@ -173,6 +186,11 @@ public class GameState {
         Graphics2D g2d = (Graphics2D) g;
 
         g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+
+        for(int i = 0; i < messages.size(); i++)
+        {
+            messages.get(i).draw(g2d);
+        }
 
         for(int i = 0; i < movingObject.size(); i++)
         {
