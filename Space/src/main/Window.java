@@ -3,7 +3,10 @@ package main;
 import gameObject.Constants;
 import graphics.Assets;
 import input.KeyBoard;
+import input.MouseInput;
 import states.GameState;
+import states.MenuState;
+import states.State;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,8 +27,8 @@ public class Window extends JFrame implements Runnable{
     private double delta = 0;
     private int AVERAGEFPS = FPS;
 
-    private GameState gameState;
     private KeyBoard keyBoard;
+    private MouseInput mouseInput;
 
     public Window()
     {
@@ -45,6 +48,7 @@ public class Window extends JFrame implements Runnable{
         canvas = new Canvas();
         // keyboard es un objeto que nos permite manejar los input por teclado
         keyBoard = new KeyBoard();
+        mouseInput = new MouseInput();
         //Establece el tamaño preferido para el recuadro del canvas
         canvas.setPreferredSize(new Dimension(Constants.WIDTH,Constants.HEIGHT));
         //Establece el tamaño maximo
@@ -56,6 +60,8 @@ public class Window extends JFrame implements Runnable{
         //Añadimos el canvas
         add(canvas);
         canvas.addKeyListener(keyBoard);
+        canvas.addMouseListener(mouseInput);
+        canvas.addMouseMotionListener(mouseInput);
         setVisible(true);
     }
 
@@ -68,7 +74,7 @@ public class Window extends JFrame implements Runnable{
     private void update()
     {
         keyBoard.update();
-        gameState.update();
+        State.getCurrentState().update();
     }
 
     private void draw()
@@ -90,7 +96,7 @@ public class Window extends JFrame implements Runnable{
         //Nos dibuja un rectangulo lleno
         g.fillRect(0,0,Constants.WIDTH,Constants.HEIGHT);
         //Pasamos los graficos a el objeto que tiene el metodo para dibujar (draw)
-        gameState.draw(g);
+        State.getCurrentState().draw(g);
         //Dibuja los string (parecido a un print pero es en un canvas)
         g.drawString(""+AVERAGEFPS,10,20);
         //--------------------------------
@@ -102,7 +108,7 @@ public class Window extends JFrame implements Runnable{
 
     public void init() {
         Assets.init();
-        gameState = new GameState();
+        State.changeState(new MenuState());
     }
 
 

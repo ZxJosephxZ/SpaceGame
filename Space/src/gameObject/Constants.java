@@ -31,7 +31,13 @@ public class Constants {
     public static final long UFO_FIRE_RATE = 1000;
     public static final double UFO_ANGLE_RANGE = Math.PI/2;
     public static final int UFO_SCORE = 40;
+    public static final long UFO_SPAWN_RATE = 10000;
 
     public static final long SPAWING_TIME = 3000;
     public static final long FLICKER_TIME = 200;
+
+    public static final String PLAY = "PLAY";
+    public static final String EXIT = "EXIT";
+
+    public static final long GAME_OVER_TIME = 3000;
 }

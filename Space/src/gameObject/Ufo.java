@@ -1,6 +1,7 @@
 package gameObject;
 
 import graphics.Assets;
+import graphics.Sound;
 import math.Vector2D;
 import states.GameState;
 
@@ -17,6 +18,7 @@ public class Ufo extends MovingObject{
     private Vector2D currentNode;
     private int index;
     private boolean following;
+    private Sound shoot;
 
     private Cronometer fireRate;
 
@@ -28,6 +30,7 @@ public class Ufo extends MovingObject{
         following = true;
         fireRate = new Cronometer();
         fireRate.run(Constants.UFO_FIRE_RATE);
+        shoot = new Sound(Assets.ufoShoot);
     }
 
     private Vector2D pathFollowing()
@@ -95,7 +98,12 @@ public class Ufo extends MovingObject{
             );
             gameState.getMovingObject().add(0, laser);
             fireRate.run(Constants.UFO_FIRE_RATE);
+            shoot.play();
 
+        }
+        if(shoot.getFramePosition() > 8500)
+        {
+            shoot.stop();
         }
 
         angle += 0.05;
@@ -115,7 +123,7 @@ public class Ufo extends MovingObject{
         at = AffineTransform.getTranslateInstance(position.getX(), position.getY());
         at.rotate(angle, width/2, height/2);
         g2d.drawImage(texture, at, null);
-        g.setColor(Color.RED);
+        //g.setColor(Color.RED);
         /**for(int i = 0; i < path.size(); i++)
         {
             g.drawRect((int)path.get(i).getX(), (int)path.get(i).getY(), 5, 5);

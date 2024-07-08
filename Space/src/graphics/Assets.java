@@ -1,5 +1,6 @@
 package graphics;
 
+import javax.sound.sampled.Clip;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -23,6 +24,10 @@ public class Assets {
 
     public static Font fontBig;
     public static Font fontMed;
+
+    public static Clip backgroundMusic, explosion, playerLoose, playerShoot, ufoShoot;
+
+    public static BufferedImage greyBtn, blueBtn;
 
     //Nos permite cargar la imagen en una variable para su posterior leida y uso
     public static void init()
@@ -62,8 +67,13 @@ public class Assets {
         {
             numbers[i] = Loader.ImageLoader("/numbers/"+(i)+".png");
         }
+        backgroundMusic = Loader.loadSound("/sounds/backgroundMusic.wav");
+        playerShoot = Loader.loadSound("/sounds/playerShoot.wav");
+        ufoShoot = Loader.loadSound("/sounds/ufoShoot.wav");
+        playerLoose = Loader.loadSound("/sounds/playerLoose.wav");
+        explosion = Loader.loadSound("/sounds/explosion.wav");
 
-
-
+        greyBtn = Loader.ImageLoader("/ui/blue_button.png");
+        blueBtn = Loader.ImageLoader("/ui/grey_button.png");
     }
 }

@@ -1,6 +1,7 @@
 package gameObject;
 
 import graphics.Assets;
+import graphics.Sound;
 import input.KeyBoard;
 import math.Vector2D;
 import main.Window;
@@ -20,6 +21,8 @@ public class Player extends MovingObject{
     private boolean spawing, visible;
     private Cronometer spawnTime, flickerTime;
 
+    private Sound shoot, loose;
+
     public Player(Vector2D position, Vector2D velocity, double maxVel, BufferedImage texture, GameState gameState) {
         super(position, velocity, maxVel, texture, gameState);
         heading = new Vector2D(0, 1);
@@ -27,6 +30,8 @@ public class Player extends MovingObject{
         fireRate = new Cronometer();
         spawnTime = new Cronometer();
         flickerTime = new Cronometer();
+        shoot = new Sound(Assets.playerShoot);
+        loose = new Sound(Assets.playerLoose);
     }
 
     @Override
@@ -57,7 +62,14 @@ public class Player extends MovingObject{
                     gameState
             ));
             fireRate.run(Constants.FIRERATE);
+            shoot.play();
         }
+
+        if(shoot.getFramePosition() > 8500)
+        {
+            shoot.stop();
+        }
+
         if (KeyBoard.RIGHT)
         {
             angle += Constants.DELTAANGLE;
@@ -116,16 +128,20 @@ public class Player extends MovingObject{
     {
         spawing = true;
         spawnTime.run(Constants.SPAWING_TIME);
+        loose.play();
+        if(!gameState.subtracLife())
+        {
+            gameState.gameOver();
+            super.Destroy();
+        }
         resetValues();
-        gameState.subtracLife();
     }
 
     private void resetValues()
     {
         angle = 0;
         velocity = new Vector2D();
-        position = new Vector2D(Constants.WIDTH/2 - Assets.player.getWidth()/2,
-                Constants.HEIGHT/2 - Assets.player.getHeight()/2);
+        position = GameState.PLAYER_START_POSITION;
     }
 
     @Override

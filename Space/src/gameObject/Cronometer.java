@@ -8,7 +8,7 @@ public class Cronometer {
     public Cronometer()
     {
         delta = 0;
-        lastTime = 0;
+        lastTime = System.currentTimeMillis();
         running = false;
     }
 

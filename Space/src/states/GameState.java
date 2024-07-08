@@ -3,6 +3,7 @@ package states;
 import gameObject.*;
 import graphics.Animation;
 import graphics.Assets;
+import graphics.Sound;
 import graphics.Text;
 import math.Vector2D;
 
@@ -11,7 +12,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Vector;
 
-public class GameState {
+public class GameState extends State{
 
     public static final Vector2D PLAYER_START_POSITION = new Vector2D(Constants.WIDTH/2 - Assets.player.getWidth()/2,
             Constants.HEIGHT/2 - Assets.player.getHeight()/2);
@@ -26,20 +27,33 @@ public class GameState {
 
     //Preferible crear una clase con estos datos (en este caso al ser pequeño el programa no hay necesidad)
     private int score = 0;
+    private Sound backgroundMusic;
+
+    private Cronometer ufoSpawner;
+    private Cronometer gameOverTimer;
+    private boolean gameOver;
 
     public GameState()
     {
         player = new Player(PLAYER_START_POSITION, new Vector2D(), Constants.PLAYER_MAX_VEL, Assets.player, this);
+
+        gameOverTimer = new Cronometer();
+        gameOver = false;
         movingObject.add(player);
         meteors = 1;
 
         startWave();
+        backgroundMusic = new Sound(Assets.backgroundMusic);
+        backgroundMusic.loop();
+        backgroundMusic.changeVolume(-10.0f);
+        ufoSpawner = new Cronometer();
+        ufoSpawner.run(Constants.UFO_SPAWN_RATE);
     }
 
     public void addScore(int value, Vector2D position)
     {
         score += value;
-        messages.add(new Message(position, true, "+"+value+" score", Color.WHITE, false, Assets.fontMed, this));
+        messages.add(new Message(position, true, "+"+value+" score", Color.WHITE, false, Assets.fontMed));
     }
 
     public ArrayList<Message> getMessages() {
@@ -83,8 +97,8 @@ public class GameState {
 
     private void startWave()
     {
-        messages.add(new Message(new Vector2D(Constants.WIDTH/2, Constants.HEIGHT/2),true,
-                "WAVE "+waves, Color.WHITE, true, Assets.fontBig, this));
+        messages.add(new Message(new Vector2D(Constants.WIDTH/2, Constants.HEIGHT/2),false,
+                "WAVE "+waves, Color.WHITE, true, Assets.fontBig));
 
         double x, y;
 
@@ -104,7 +118,6 @@ public class GameState {
             ));
         }
         meteors++;
-        spawnUfo();
         waves++;
     }
 
@@ -158,7 +171,13 @@ public class GameState {
     {
         for(int i = 0; i < movingObject.size(); i++)
         {
-            movingObject.get(i).update();
+            MovingObject mo = movingObject.get(i);
+            mo.update();
+            if(mo.isDead())
+            {
+                movingObject.remove(i);
+                i--;
+            }
         }
 
         for(int i = 0; i < explosions.size(); i++)
@@ -171,6 +190,19 @@ public class GameState {
             }
         }
 
+
+        if(gameOver && !gameOverTimer.isRunning())
+        {
+            State.changeState(new MenuState());
+        }
+        if(!ufoSpawner.isRunning())
+        {
+            ufoSpawner.run(Constants.UFO_SPAWN_RATE);
+            spawnUfo();
+        }
+        gameOverTimer.update();
+        ufoSpawner.update();
+
         for(int i = 0; i < movingObject.size(); i++)
         {
             if(movingObject.get(i) instanceof Meteor)
@@ -178,6 +210,7 @@ public class GameState {
                 return;
             }
         }
+
         startWave();
     }
 
@@ -190,6 +223,10 @@ public class GameState {
         for(int i = 0; i < messages.size(); i++)
         {
             messages.get(i).draw(g2d);
+            if(messages.get(i).isDead())
+            {
+                messages.remove(i);
+            }
         }
 
         for(int i = 0; i < movingObject.size(); i++)
@@ -208,6 +245,8 @@ public class GameState {
 
     private void drawLives(Graphics g)
     {
+        if(lives < 1)
+            return;
         Vector2D livePosition = new Vector2D(25, 25);
         g.drawImage(Assets.others, (int)livePosition.getX(), (int)livePosition.getY(), null);
         g.drawImage(Assets.numbers[10], (int)livePosition.getX()+40,
@@ -249,5 +288,24 @@ public class GameState {
         return player;
     }
 
-    public void subtracLife(){lives--;}
+    public boolean subtracLife(){
+        lives--;
+        return lives > 0;
+    }
+
+    public void gameOver()
+    {
+        Message gameOverMsg = new Message(
+                PLAYER_START_POSITION,
+                true,
+                "GAME OVER",
+                Color.WHITE,
+                true,
+                Assets.fontBig
+        );
+        this.messages.add(gameOverMsg);
+        gameOverTimer.run(Constants.GAME_OVER_TIME);
+        gameOver = true;
+    }
+
 }
