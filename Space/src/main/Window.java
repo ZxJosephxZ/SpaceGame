@@ -5,6 +5,7 @@ import graphics.Assets;
 import input.KeyBoard;
 import input.MouseInput;
 import states.GameState;
+import states.LoadingState;
 import states.MenuState;
 import states.State;
 
@@ -107,8 +108,18 @@ public class Window extends JFrame implements Runnable{
     }
 
     public void init() {
+
+        Thread loadingThread = new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                Assets.init();
+            }
+        });
+
         Assets.init();
-        State.changeState(new MenuState());
+        State.changeState(new LoadingState(loadingThread));
     }
 
 

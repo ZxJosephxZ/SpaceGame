@@ -40,4 +40,7 @@ public class Constants {
     public static final String EXIT = "EXIT";
 
     public static final long GAME_OVER_TIME = 3000;
+
+    public static final int LOADING_BAR_WIDTH = 500;
+    public static final int LOADING_BAR_HEIGHT = 50;
 }
