@@ -5,10 +5,13 @@ import graphics.Animation;
 import graphics.Assets;
 import graphics.Sound;
 import graphics.Text;
+import io.JSONParser;
+import io.ScoreData;
 import math.Vector2D;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -193,6 +196,15 @@ public class GameState extends State{
 
         if(gameOver && !gameOverTimer.isRunning())
         {
+            try{
+                ArrayList<ScoreData> dataList = JSONParser.readFile();
+                dataList.add(new ScoreData(score));
+                JSONParser.writeFile(dataList);
+            }catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+
             State.changeState(new MenuState());
         }
         if(!ufoSpawner.isRunning())
