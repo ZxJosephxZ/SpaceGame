@@ -1,3 +1,5 @@
+package Main;
+
 import javax.swing.*;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -13,5 +15,6 @@ public class Main {
         window.pack();
         window.setLocationRelativeTo(null);
         window.setVisible(true);
+        gamePanel.startGameThread();
     }
 }
